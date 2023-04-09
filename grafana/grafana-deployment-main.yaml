@@ -103,7 +103,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-dashboardsdef
-  namespace: grafana 
+  namespace: grafana
 data:
   dashboards.yaml: |-
     apiVersion: 1
@@ -363,8 +363,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-pv
-            - mountPath: /etc/grafana/provisioning/dashboards
-              name: grafana-dashboard
+            - mountPath: /etc/grafana/provisioning/datasources
+              name: grafana-datasources
               readOnly: false
             - mountPath: /var/lib/grafana/dashboards
               name: grafana-dashboard
