@@ -98,7 +98,23 @@ data:
         }
       ]
     }
-
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard
+  namespace: monitoring
+data:
+  dashboards.yaml: |-
+    apiVersion: 1
+    providers:
+      - name: 'Metrics'
+        updateIntervalSeconds: 10
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: true
+        type: file
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -347,12 +363,14 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-pv
-            - mountPath: /etc/grafana/provisioning/datasources
-              name: grafana-datasources
-              readOnly: false
             - mountPath: /etc/grafana/provisioning/dashboards
               name: grafana-dashboard
               readOnly: false
+            - mountPath: /var/lib/grafana/dashboards
+              name: grafana-dashboard
+              readOnly: false
+            - mountPath: /etc/grafana/provisioning/dashboards
+              name: grafana-dashboard-definition
       volumes:
         - name: grafana-pv
           persistentVolumeClaim:
@@ -365,6 +383,10 @@ spec:
           configMap:
             defaultMode: 420
             name: grafana-dashboard
+        - name: grafana-dashboard-definition
+          configMap:
+              defaultMode: 420
+              name: grafana-dashboardsdef
 
 ---
 apiVersion: v1
